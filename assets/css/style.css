@@ -1,12 +1,19 @@
-     body { /* Visual */ background: lightgrey;}
-      #question-holder {
-        /* Positioning */
-         margin: 0 auto;
-        /* Box-model */
-        width: 400px;
-        /* Typography */
-        text-align: center;
+     body {
+       background-image: url('../images/background.png');
+       font-family: helvetica;
       }
+      
+
+      #question-holder {
+        margin: 0 auto;
+        width: 400px;
+        text-align: center;
+        color: lightgrey;
+        font-size: 30px;
+        font-weight: bold;
+        
+      }
+
       #buttons {
         /* Positioning */
         margin: 50px 0;
@@ -32,7 +39,9 @@
         display: inline-block;
       }
 
-      #question-holder {
-        font-family: helvetica;
-        font-size: 
-      }
+    #timer {
+      color: lightgrey;
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+    }

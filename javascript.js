@@ -5,36 +5,36 @@ var fullQuestion = [
   {
   question: "Who Owns a Beet Farm?",
   answer: ["Angela", "Dwight", "Andy", "Jim"],
-  correctAnswer: "answer1",
-  images: "image/pam.jpg",
+  correctAnswer: [2],
+  images: '<img src="images/beets.png">',
   },
 
   {
   question: "What is Jim's Last Name?",
   answer: ["Hathaway", "Hubert", "Halpert", "Albert"],
   correctAnswer: "answer2",
-  images: "image/pam.jpg",
+  images: '<img src="images/jim.jpg">',
   },
   
   {
   question: "What is Dwight's cousin's name?",
   answer: ["Mose", "Robert", "Bob", "Jose"],
   correctAnswer: "answer3",
-  images: "image/pam.jpg",
+  images: '<img src="images/theworst.gif">',
   },
 
   {
   question: "Bears, Beets, __________",
   answer: ["Star Trek", "Battlestar Galactica", "Battle Galaxy", "Rattlestar Lactica"],
   correctAnswer: "answer4",
-  images: "image/pam.jpg",
+  images: '<img src="images/jim.jpg">',
   },
 
   {
   question: "Who was Pam engaged to?",
   answer: ["Toby", "Roy", "Andy", "Jim"],
   correctAnswer: "answer5",
-  images: "image/pam.jpg",
+  images: '<img src="images/jim.jpg">',
   },
 
   ];
@@ -66,14 +66,15 @@ function displayQuestion() {
 }
 
 function nextQuestion() {
+
   //  TODO: Increment the count by 1.
   count++;
 
   // TODO: Show the loading gif in the "image-holder" div.
-  $("#question-holder").html("loading");
+  $("#question-holder").html("");
 
-  // TODO: Use a setTimeout to run displayImage after 1 second.
-  setTimeout(displayQuestion, 3000);
+  // wait 2 sec, then display question
+  setTimeout(displayQuestion, 2000);
 
   // TODO: If the count is the same as the length of the image array, reset the count to 0.
   if (count === fullQuestion.length) {
@@ -83,28 +84,32 @@ function nextQuestion() {
 
 function startTrivia() {
 
-  // TODO: Use showImage to hold the setInterval to run nextImage.
-  showQuestion = setInterval(nextQuestion, 1000);
+  // every 2 sec, show nextQ
+  showQuestion = setInterval(countdown(), tick);
+
 
 }
 
-//   function timer() {
-//     var count = 30;
-//     var counter = setInterval(timer, 1000); //1000 will  run it every 1 second
-    
-//     count = count - 1;
- 
-//   if (count <= 0)
+function countdown() {
+    var seconds = 10;
 
-//   {
-//      clearInterval(counter);
-//      //counter ended, do something here
-//      return;
-//   }
+    tick = setInterval(function(){
 
-//   //Do code for showing the number of seconds here
-// }
-// }
+      $("#timer").html(seconds);
+//this means seconds = seconds - 1
+      seconds--
+    }, 1000);
+
+
+    if (seconds == 0) {
+      seconds = 10;
+      clearInterval(intervalId);
+    };
+   
+};
+
+
+
 
 function stopTrivia() {
 
@@ -112,6 +117,12 @@ function stopTrivia() {
   clearInterval(showQuestion);
 
 }
+
+
+// function checkAnswers() {
+//   var userInput = 
+//   console.log();
+// }
 
 // This will run the display image function as soon as the page loads.
 displayQuestion();
