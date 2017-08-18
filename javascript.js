@@ -5,7 +5,7 @@ var fullQuestion = [
   {
   question: "Who Owns a Beet Farm?",
   answer: ["Angela", "Dwight", "Andy", "Jim"],
-  correctAnswer: [2],
+  correctAnswer: 2,
   images: '<img src="images/beets.png">',
   },
 

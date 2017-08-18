@@ -1,47 +1,37 @@
-     body {
-       background-image: url('../images/background.png');
-       font-family: helvetica;
-      }
-      
+body {
+  background-image: url('../images/background.png');
+  font-family: helvetica;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+  
 
-      #question-holder {
-        margin: 0 auto;
-        width: 400px;
-        text-align: center;
-        color: lightgrey;
-        font-size: 30px;
-        font-weight: bold;
-        
-      }
+.list-group-item{
+    margin: 5px;
+}
 
-      #buttons {
-        /* Positioning */
-        margin: 50px 0;
-        /* Typography */
-        text-align: center;
-      }
-      button {
-        /* Box-model */
-        width: 200px;
-        height: 100px;
-        margin: auto;
-        display: block;
-      }
+.container{
+    background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 20px;
+}
 
-      #answer-buttons button {
-        width: 70%;
-        margin: 5px auto;
-        padding: 0;
+h1{
+    color: #423e3e;
+    font-size: 40px;
+}
+h1, p, .list-group-item, #imageHolder, #giftarget{
+    display: flex;
+    justify-content: center;
+}
+#question{
+    font-size:30px;
+}
+#timeRemaining{
+    font-size: 25px;
+}
 
-      }
-
-      #start, #stop {
-        display: inline-block;
-      }
-
-    #timer {
-      color: lightgrey;
-      font-size: 30px;
-      font-weight: bold;
-      text-align: center;
-    }
