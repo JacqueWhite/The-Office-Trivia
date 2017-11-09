@@ -1,164 +1,170 @@
-$(document).ready(function(){
-    var showQuestion;
-    var count = 0;
-    var timeRemaining = 10;
-    var intervalId;
-    var questionActive = false;
-    var right=0;
-    var wrong=0;
-    var unanswered=0;
-    
-    
-    var fullquestions = [
-      {
-      question: "Who Owns a Beet Farm?",
-      answers: ["Angela", "Dwight", "Andy", "Jim"],
-      correctAnswer: 2,
-      images: '<img src="assets/images/dwight.gif">',
-      },
+var panel = $("#quiz-area");
+var countStartNumber = 30;
 
-      {
-      question: "What is Jim's Last Name?",
-      answers: ["Hathaway", "Hubert", "Halpert", "Albert"],
-      correctAnswer: 3,
-      images: '<img src="assets/images/jim.jpg">',
-      },
-      
-      {
-      question: "What is Dwight's cousin's name?",
-      answers: ["Mose", "Robert", "Bob", "Jose"],
-      correctAnswer: 1,
-      images: '<img src="assets/images/mose.jpg">',
-      },
 
-      {
-      question: "Bears, Beets, __________",
-      answers: ["Star Trek", "Battlestar Galactica", "Battle Galaxy", "Rattlestar Lactica"],
-      correctAnswer: 2,
-      images: '<img src="assets/images/battlestar.jpg">',
-      },
+var triviaQuestions = [
+    {
+        question: "Who Owns a Beet Farm?",
+        answers: ["Angela", "Dwight", "Andy", "Jim"],
+        correctAnswer: "Dwight",
+        image: "assets/images/beets.png"
+    },
+    {
+        question: "What is Jim's Last Name?",
+        answers: ["Hathaway", "Hubert", "Halpert", "Albert"],
+        correctAnswer: "Halpert",
+        image: "assets/images/jim.jpg"
+    },
+    {
+        question: "What is Dwight's cousin's name?",
+        answers: ["Mose", "Robert", "Bob", "Jose"],
+        correctAnswer: "Mose",
+        image: "assets/images/theworst.gif"
+    },
+    {
+        question: "Bears, Beets, __________",
+        answers: ["Star Trek", "Battlestar Galactica", "Battle Galaxy", "Rattlestar Lactica"],
+        correctAnswer: "Battlestar Galactica",
+        image: "assets/images/battlestar.jpg"
+    },
+    {
+        question: "Who was Pam engaged to?",
+        answers: ["Toby", "Roy", "Andy", "Jim"],
+        correctAnswer: "Trick question: Roy and then... Jim!",
+        image: "assets/images/jim.jpg"
+    }
+];
 
-      {
-      question: "Who was Pam engaged to?",
-      answers: ["Toby", "Roy", "Andy", "Jim"],
-      correctAnswer: 2 || 4,
-      images: '<img src="assets/images/pam.gif">',
-  },
+// Variable to hold setInterval
+var timer;
 
-  ];
-    
-    // When the start button is pressed...
-    $("#startButton").click(startQuestion);
-//    $("#startOverButton").click(stopQuestion);
+var game = {
 
-    
-    function startQuestion(){
-        $("#giftarget").hide();
-        console.log("STARTED");
-        if (questionActive) {
-            return
+    triviaQuestions: triviaQuestions,
+    currentQuestion: 0,
+    counter: countStartNumber,
+    correct: 0,
+    incorrect: 0,
+
+    countdown: function() {
+        this.counter--;
+        $("#counter-number").html(this.counter);
+        if (this.counter === 0) {
+            console.log("TIME UP");
+            this.timeUp();
         }
-        questionActive = true;
-        console.log("DO WE GET HERE?");
-        if (count === fullquestions.length){
-            endGame();
+    },
+
+    loadQuestion: function() {
+
+        timer = setInterval(this.countdown.bind(this), 1000);
+
+        panel.html("<h2>" + triviaQuestions[this.currentQuestion].question + "</h2>");
+
+        for (var i = 0; i < triviaQuestions[this.currentQuestion].answers.length; i++) {
+            panel.append("<button class='answer-button' id='button' data-name='" + triviaQuestions[this.currentQuestion].answers[i] +
+                "'>" + triviaQuestions[this.currentQuestion].answers[i] + "</button>");
         }
-        else{ 
-        displayQuestion();
-        intervalId = setInterval(tick, 1000);
-        console.log("startQuestion function");
+    },
+
+    nextQuestion: function() {
+        this.counter = window.countStartNumber;
+        $("#counter-number").html(this.counter);
+        this.currentQuestion++;
+        this.loadQuestion.bind(this)();
+    },
+
+    timeUp: function() {
+
+        clearInterval(window.timer);
+
+        $("#counter-number").html(this.counter);
+
+        panel.html("<h2>Out of Time!</h2>");
+        panel.append("<h3>The Correct Answer was: " + triviaQuestions[this.currentQuestion].correctAnswer);
+        panel.append("<img src='" + triviaQuestions[this.currentQuestion].image + "' />");
+
+        if (this.currentQuestion === triviaQuestions.length - 1) {
+            setTimeout(this.results, 3 * 1000);
+        } else {
+            setTimeout(this.nextQuestion, 3 * 1000);
         }
-    }
+    },
 
-    function displayQuestion(){ 
-        var currentQuestion = fullquestions[count];
-        $("#question").html(fullquestions[count].question);
-        $("#spot1").html(fullquestions[count].answers[0]);
-        $("#spot2").html(fullquestions[count].answers[1]);
-        $("#spot3").html(fullquestions[count].answers[2]);
-        $("#spot4").html(fullquestions[count].answers[3]);
-    }
+    results: function() {
 
-    function tick() {
-        timeRemaining--;
-        displayTimer();
-        if (timeRemaining <= 0) {
-            clearInterval(intervalId);
-            timeRemaining = 10;
-            unansweredAnswer();
+        clearInterval(window.timer);
+
+        panel.html("<h2>Let's see how well you know your stuff...</h2>");
+
+        $("#counter-number").html(this.counter);
+
+        panel.append("<h3>Correct Answers: " + this.correct + "</h3>");
+        panel.append("<h3>Incorrect Answers: " + this.incorrect + "</h3>");
+        panel.append("<h3>Unanswered: " + (triviaQuestions.length - (this.incorrect + this.correct)) + "</h3>");
+        panel.append("<br><button id='start-over'>Start Over?</button>");
+    },
+
+    clicked: function(event) {
+        clearInterval(window.timer);
+        if ($(event.target).attr("data-name") === triviaQuestions[this.currentQuestion].correctAnswer) {
+            this.answeredCorrectly();
+        } else {
+            this.answeredIncorrectly();
         }
-    }
+    },
 
+    answeredIncorrectly: function() {
 
-    function nextQuestion(){
-        count++;
-        questionActive = false;
-        
-    }
+        this.incorrect++;
 
-    function displayTimer() {
-        $('#timeRemaining').html("Time Remaining: " + timeRemaining);
-    }
+        clearInterval(window.timer);
 
-     
-    
-    $(".list-group-item").on("click", function(){
-        
-        var value = +$(this).attr("value");
-        console.log(value);
-        clearInterval(intervalId);
-        if(value === fullquestions[count].correctAnswer){
-            rightAnswer();
-        } else if (value !== fullquestions[count].correctAnswer){
-            wrongAnswer();
+        panel.html("<h2>Nope!</h2>");
+        panel.append("<h3>The Correct Answer was: " + triviaQuestions[this.currentQuestion].correctAnswer + "</h3>");
+        panel.append("<img src='" + triviaQuestions[this.currentQuestion].image + "' />");
+
+        if (this.currentQuestion === triviaQuestions.length - 1) {
+            setTimeout(this.results.bind(this), 3 * 1000);
+        } else {
+            setTimeout(this.nextQuestion.bind(this), 3 * 1000);
         }
-    });
-    
-    function rightAnswer (){
-        $("#question").html("Correct Answer!");
-        $("#giftarget").html(fullquestions[count].images); 
-        right++;
-         $("#giftarget").show();
-        clearInterval(intervalId);
-        responseScreenTimer();
-        console.log("correct");
-       }
+    },
 
-    function wrongAnswer(){
-        $("#question").html("Wrong Answer!");
-        $("#giftarget").html(fullquestions[count].images); 
-        wrong++;
-         $("#giftarget").show();
-        clearInterval(intervalId);
-        responseScreenTimer();
+    answeredCorrectly: function() {
+
+        clearInterval(window.timer);
+
+        this.correct++;
+
+        panel.html("<h2>Correct!</h2>");
+        panel.append("<img src='" + triviaQuestions[this.currentQuestion].image + "' />");
+
+        if (this.currentQuestion === triviaQuestions.length - 1) {
+            setTimeout(this.results.bind(this), 3 * 1000);
+        } else {
+            setTimeout(this.nextQuestion.bind(this), 3 * 1000);
+        }
+    },
+
+    reset: function() {
+        this.currentQuestion = 0;
+        this.counter = countStartNumber;
+        this.correct = 0;
+        this.incorrect = 0;
+        this.loadQuestion();
     }
+};
 
-    function unansweredAnswer(){
-        $("#question").html("You ran out of time!");
-        $("#giftarget").html(fullquestions[count].images); 
-        unanswered++;
-         $("#giftarget").show();
-        responseScreenTimer();
-    }
+// CLICK EVENTS
 
-    function responseScreenTimer(){
-        nextQuestion();
-        timeRemaining = 10;
-        answerTimer = setTimeout(startQuestion, 5000);
-        console.log("response screen timer");
-    
-    }
+$(document).on("click", "#start-over", game.reset.bind(game));
 
-    function endGame(){
-        $("#question").html("Game Over");
-        $("#spot1").html(right + " Correct Answers");
-        $("#spot2").html(wrong + " Wrong Answers");
-        $("#spot3").html(unanswered + " unanswered Questions");
-        $("#spot4").html("");
-       
-    };
+$(document).on("click", ".answer-button", function(e) {
+    game.clicked.bind(game, e)();
+});
 
-
-
-
+$(document).on("click", "#start", function() {
+    $("#sub-wrapper").prepend("<h2>Time Left: <span id='counter-number'>30</span> Seconds</h2>");
+    game.loadQuestion.bind(game)();
 });
